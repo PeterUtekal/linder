@@ -1,0 +1,134 @@
+version: '3.8'
+
+services:
+  # Nginx/Caddy web server
+  web:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./backend/public:/var/www/html/public:ro
+      - ./frontend/dist:/var/www/html/frontend:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Laravel PHP-FPM application
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/var/www/html
+      - ./backend/.env:/var/www/html/.env
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=${DB_DATABASE:-airdrop_viral}
+      - DB_USERNAME=${DB_USERNAME:-airdrop_user}
+      - DB_PASSWORD=${DB_PASSWORD:-airdrop_password}
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+    depends_on:
+      - db
+      - cache
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "php artisan tinker --execute='echo 1;'"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Laravel Queue Worker
+  queue:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: php artisan queue:work --sleep=3 --tries=3
+    volumes:
+      - ./backend:/var/www/html
+      - ./backend/.env:/var/www/html/.env
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=${DB_DATABASE:-airdrop_viral}
+      - DB_USERNAME=${DB_USERNAME:-airdrop_user}
+      - DB_PASSWORD=${DB_PASSWORD:-airdrop_password}
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+    depends_on:
+      - db
+      - cache
+    networks:
+      - app-network
+
+  # Vue.js Frontend Build
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run build
+    networks:
+      - app-network
+
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=${DB_DATABASE:-airdrop_viral}
+      - POSTGRES_USER=${DB_USERNAME:-airdrop_user}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-airdrop_password}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-airdrop_user} -d ${DB_DATABASE:-airdrop_viral}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  cache:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  app-network:
+    driver: bridge
