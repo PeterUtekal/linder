@@ -1,0 +1,48 @@
+{
+  "name": "airdrop-viral-app",
+  "version": "1.0.0",
+  "description": "A viral social introduction app leveraging AirDrop for IRL connections",
+  "private": true,
+  "scripts": {
+    "dev": "docker-compose up -d && docker-compose exec app npm run dev",
+    "start": "docker-compose up -d",
+    "stop": "docker-compose down",
+    "build": "docker-compose build",
+    "fresh": "npm run setup && npm run migrate:fresh && npm run seed",
+    "setup": "npm run build && npm run composer:install && npm run npm:install && npm run key:generate",
+    "migrate": "docker-compose exec app php artisan migrate",
+    "migrate:fresh": "docker-compose exec app php artisan migrate:fresh",
+    "seed": "docker-compose exec app php artisan db:seed",
+    "composer:install": "docker-compose exec app composer install",
+    "npm:install": "docker-compose exec app npm install",
+    "key:generate": "docker-compose exec app php artisan key:generate",
+    "logs": "docker-compose logs -f",
+    "logs:app": "docker-compose logs -f app",
+    "logs:db": "docker-compose logs -f db",
+    "shell": "docker-compose exec app bash",
+    "tinker": "docker-compose exec app php artisan tinker",
+    "test": "docker-compose exec app php artisan test",
+    "queue": "docker-compose exec app php artisan queue:work",
+    "cache:clear": "docker-compose exec app php artisan cache:clear",
+    "db:shell": "docker-compose exec db psql -U airdrop_user -d airdrop_viral",
+    "redis:cli": "docker-compose exec cache redis-cli",
+    "status": "docker-compose ps",
+    "clean": "docker-compose down -v && rm -rf backend/vendor backend/node_modules",
+    "prod:build": "docker-compose exec app npm run build",
+    "prod:deploy": "echo 'Run deployment script for your cloud provider'",
+    "init": "./setup.sh"
+  },
+  "keywords": [
+    "airdrop",
+    "social",
+    "viral",
+    "laravel",
+    "vue",
+    "docker"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
