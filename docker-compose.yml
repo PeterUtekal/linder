@@ -7,11 +7,11 @@ services:
       context: ./docker/nginx
       dockerfile: Dockerfile
     ports:
-      - "80:80"
-      - "443:443"
+      - "8080:80"
+      - "8443:443"
     volumes:
-      - ./backend/public:/var/www/html/public:ro
-      - ./frontend/dist:/var/www/html/frontend:ro
+      - ./airdrop-viral-app/backend/public:/var/www/html/public:ro
+      - ./airdrop-viral-app/frontend/dist:/var/www/html/frontend:ro
       - caddy_data:/data
       - caddy_config:/config
     depends_on:
@@ -27,11 +27,11 @@ services:
   # Laravel PHP-FPM application
   app:
     build:
-      context: ./backend
+      context: ./airdrop-viral-app/backend
       dockerfile: Dockerfile
     volumes:
-      - ./backend:/var/www/html
-      - ./backend/.env:/var/www/html/.env
+      - ./airdrop-viral-app/backend:/var/www/html
+      - ./airdrop-viral-app/backend/.env:/var/www/html/.env
     environment:
       - DB_CONNECTION=pgsql
       - DB_HOST=db
@@ -55,12 +55,12 @@ services:
   # Laravel Queue Worker
   queue:
     build:
-      context: ./backend
+      context: ./airdrop-viral-app/backend
       dockerfile: Dockerfile
     command: php artisan queue:work --sleep=3 --tries=3
     volumes:
-      - ./backend:/var/www/html
-      - ./backend/.env:/var/www/html/.env
+      - ./airdrop-viral-app/backend:/var/www/html
+      - ./airdrop-viral-app/backend/.env:/var/www/html/.env
     environment:
       - DB_CONNECTION=pgsql
       - DB_HOST=db
@@ -79,10 +79,10 @@ services:
   # Vue.js Frontend Build
   frontend:
     build:
-      context: ./frontend
+      context: ./airdrop-viral-app/frontend
       dockerfile: Dockerfile
     volumes:
-      - ./frontend:/app
+      - ./airdrop-viral-app/frontend:/app
       - /app/node_modules
     command: npm run build
     networks:

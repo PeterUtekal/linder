@@ -98,7 +98,7 @@ docker-compose ps
 echo -e "\n${GREEN}🎉 Setup complete!${NC}"
 echo "======================================"
 echo -e "${GREEN}Your application is ready at:${NC}"
-echo -e "  Web App: ${YELLOW}http://localhost${NC}"
+echo -e "  Web App: ${YELLOW}http://localhost:8080${NC}"
 echo -e "  API: ${YELLOW}http://localhost/api${NC}"
 echo -e "\n${GREEN}Useful commands:${NC}"
 echo -e "  ${YELLOW}npm run dev${NC}     - Start development server"
