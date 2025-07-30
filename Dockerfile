@@ -11,9 +11,12 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     && docker-php-ext-install pdo mbstring zip exif pcntl gd curl
 
-# Install MongoDB extension
-RUN pecl install mongodb \
+# Install MongoDB extension (compatible with mongodb/mongodb 1.21)
+RUN pecl install mongodb-1.21.4 \
     && docker-php-ext-enable mongodb
+
+# Configure Git safe directory to avoid composer warnings
+RUN git config --global --add safe.directory /var/www/html
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
