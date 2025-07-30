@@ -16,10 +16,11 @@
     <div class="hero-content flex-col lg:flex-row-reverse p-4">
         <div class="card w-full max-w-md bg-base-100 shadow-2xl">
             <div class="card-body">
-                <h2 class="card-title text-3xl font-bold mb-2">Create Your Club Link</h2>
-                <p class="mb-4 text-base-content/70">
-                    Instantly create your own shareable link. <br>
-                    <span class="font-semibold text-primary">Save it to your iPhone home screen</span>, then <span class="font-semibold text-primary">Airdrop it to everyone in the club</span> and make new friends fast.
+                <h2 class="card-title text-4xl font-extrabold leading-tight mb-3 text-center">Drop Your Link. Meet The Club.</h2>
+                <p class="text-sm uppercase tracking-wider font-semibold text-primary text-center mb-4">30&nbsp;seconds • 3&nbsp;steps • Unlimited&nbsp;connections</p>
+                <p class="mb-4 text-base-content/70 leading-relaxed text-center">
+                    1.&nbsp;Fill this in. 2.&nbsp;Add the link to your Home&nbsp;Screen. 3.&nbsp;Airdrop it to the room.<br>
+                    That's it – let the connections roll in. 🍸
                 </p>
                 <form @submit.prevent="submit" class="flex flex-col gap-2">
                     <fieldset class="fieldset p-0 border-0">
@@ -65,10 +66,19 @@
                             </svg>
                             Profile created!
                         </h3>
-                        <p class="py-4 break-all">
-                            <span class="font-semibold">Your link:</span><br>
+                        <p class="py-4 break-all text-center">
+                            <span class="font-semibold">Your Link</span><br>
                             <a :href="link" x-text="link" class="link link-primary"></a>
                         </p>
+                        <p class="text-sm text-base-content/60 mb-4 leading-relaxed text-center">
+                            • Tap the <span class="font-bold">Share&nbsp;icon</span> in Safari<br>
+                            • Choose <span class="font-bold">“Add&nbsp;to&nbsp;Home&nbsp;Screen”</span><br>
+                            • Open it anytime and <span class="font-bold">Airdrop</span> to new friends
+                        </p>
+                        <div class="flex flex-wrap gap-2 justify-center mb-2">
+                            <button type="button" class="btn btn-outline btn-primary btn-sm" @click="navigator.clipboard.writeText(link);$el.innerText='Copied!'">Copy Link</button>
+                            <button type="button" x-show="!!navigator.share" class="btn btn-primary btn-sm" @click="navigator.share({title:'Check my link',url:link}).catch(()=>{})">Share…</button>
+                        </div>
                         <div class="flex gap-2">
                             <button type="button" class="btn btn-outline btn-success" @click="navigator.clipboard.writeText(link)">Copy</button>
                             <button type="button" class="btn btn-success" @click="document.getElementById('successDialog').close()">Close</button>

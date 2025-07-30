@@ -36,6 +36,11 @@
                         <div class="alert alert-warning text-center">Swipe right to reveal contact &raquo;</div>
                     </template>
                 </div>
+                <div class="mt-4 flex flex-wrap gap-2 justify-center">
+                    <button class="btn btn-outline btn-primary btn-sm" @click="navigator.clipboard.writeText(window.location.href);$event.target.innerText='Copied!'">Copy&nbsp;Link</button>
+                    <button class="btn btn-primary btn-sm" x-show="!!navigator.share" @click="navigator.share({title:'{{ $profile->name }} on LinkwMe',url:window.location.href}).catch(()=>{})">Share…</button>
+                    <button class="btn btn-ghost btn-xs" onclick="alert('Tip: On iPhone tap the share icon and choose \"Add to Home Screen\" to keep this link handy.')">Add&nbsp;to&nbsp;Home&nbsp;Screen?</button>
+                </div>
             </div>
         </div>
     </div>
