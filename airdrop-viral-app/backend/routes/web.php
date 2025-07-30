@@ -1,9 +1,8 @@
 <?php
 
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-use App\Models\Profile;
+use App\Http\Controllers\LinkController;
+use App\Http\Controllers\Api\SwipeController as ApiSwipeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,42 +15,10 @@ use App\Models\Profile;
 |
 */
 
-// Home page - Create profile
-Route::get('/', function () {
-    return Inertia::render('CreateProfile');
-})->name('home');
+Route::get('/', [LinkController::class, 'create'])->name('home');
+Route::post('/', [LinkController::class, 'store'])->name('link.store');
+Route::get('/p/{shortCode}', [LinkController::class, 'show'])->name('profile.view');
+Route::get('/success/{shortCode}', [LinkController::class, 'success'])->name('profile.success');
 
-// View profile by short code
-Route::get('/p/{shortCode}', function ($shortCode) {
-    $profile = Profile::where('short_code', $shortCode)
-        ->where('is_active', true)
-        ->firstOrFail();
-    
-    return Inertia::render('ViewProfile', [
-        'profile' => $profile->only(['name', 'photo_url', 'message', 'location', 'short_code']),
-    ]);
-})->name('profile.view');
-
-// Success page after creating profile
-Route::get('/success/{shortCode}', function ($shortCode) {
-    $profile = Profile::where('short_code', $shortCode)
-        ->where('is_active', true)
-        ->firstOrFail();
-    
-    return Inertia::render('Success', [
-        'profile' => $profile,
-        'shareUrl' => $profile->getShareUrl(),
-        'airdropName' => $profile->getAirdropName(),
-    ]);
-})->name('profile.success');
-
-// Analytics page
-Route::get('/analytics/{shortCode}', function ($shortCode) {
-    $profile = Profile::where('short_code', $shortCode)
-        ->where('is_active', true)
-        ->firstOrFail();
-    
-    return Inertia::render('Analytics', [
-        'profileCode' => $shortCode,
-    ]);
-})->name('profile.analytics');
+// Handle swipe post (AJAX)
+Route::post('/swipe/{shortCode}', [ApiSwipeController::class, 'store'])->name('swipe.store');
