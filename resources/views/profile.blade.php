@@ -1,37 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="bumblebee">
 <head>
     <meta charset="UTF-8">
     <title>{{ $profile->name }}</title>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
 </head>
-<body class="bg-gray-900 text-white" x-data="swipeCard()">
+<body class="bg-base-200 text-base-content" x-data="swipeCard()">
 <div class="flex items-center justify-center min-h-screen">
     <div class="w-full max-w-sm">
         <div
-            class="relative bg-gray-800 rounded-lg shadow-lg overflow-hidden"
+            class="card bg-base-100 shadow-xl relative overflow-hidden"
             @touchstart="start($event)"
             @touchmove="move($event)"
             @touchend="end($event)"
             x-ref="card">
             @if($profile->photo_url)
-                <img src="{{ $profile->photo_url }}" alt="" class="w-full h-64 object-cover">
+                <figure><img src="{{ $profile->photo_url }}" alt="" class="w-full h-64 object-cover" /></figure>
             @endif
-            <div class="p-4">
-                <h1 class="text-2xl font-bold mb-2">{{ $profile->name }}</h1>
+            <div class="card-body">
+                <h1 class="card-title text-2xl font-bold mb-2">{{ $profile->name }}</h1>
                 <p class="mb-4">{{ $profile->message }}</p>
-
-                <template x-if="showContact">
-                    <div>
-                        <p class="text-sm uppercase text-gray-400 mb-1">Contact</p>
-                        <span x-html="contactLink()"></span>
-                    </div>
-                </template>
-
-                <template x-if="!showContact">
-                    <p class="text-center text-gray-400">Swipe right to reveal contact &raquo;</p>
-                </template>
+                <div>
+                    <template x-if="showContact">
+                        <div class="alert alert-info flex flex-col gap-2">
+                            <span class="text-xs uppercase font-semibold">Contact</span>
+                            <span x-html="contactLink()"></span>
+                        </div>
+                    </template>
+                    <template x-if="!showContact">
+                        <div class="alert alert-warning text-center">Swipe right to reveal contact &raquo;</div>
+                    </template>
+                </div>
             </div>
         </div>
     </div>

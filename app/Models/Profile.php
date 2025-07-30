@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Jenssegers\Mongodb\Eloquent\Model;
+
 use Illuminate\Support\Str;
+use MongoDB\Laravel\Eloquent\Model as Model;
 
 class Profile extends Model
 {
