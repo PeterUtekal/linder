@@ -1,23 +1,28 @@
 {
   "name": "Linder",
-  "dockerComposeFile": ["../docker-compose.yml"],
-  "runServices": ["app", "nginx", "mongo"],
-  "service": "app",
-  "workspaceFolder": "/var/www/html",
-  "forwardPorts": [8080],
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {
-      "moby": true,
-      "dockerCompose": true
+    "ghcr.io/devcontainers/features/php:1": {
+      "version": "8.3"
     },
     "ghcr.io/devcontainers/features/node:1": {
       "version": "20"
     }
   },
-  "postCreateCommand": "npm install",
-  "extensions": [
-    "bmewburn.vscode-intelephense-client",
-    "esbenp.prettier-vscode",
-    "xdebug.php-pack"
-  ]
+  "postCreateCommand": "composer install --no-interaction && cp -n .env.example .env && php artisan key:generate --ansi && npm install",
+  "forwardPorts": [8000, 5173],
+  "portsAttributes": {
+    "5173": {
+      "label": "Vite (Frontend)",
+      "onAutoForward": "notify"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "esbenp.prettier-vscode",
+        "xdebug.php-pack"
+      ]
+    }
+  }
 }
