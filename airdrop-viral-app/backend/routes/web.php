@@ -55,3 +55,7 @@ Route::get('/analytics/{shortCode}', function ($shortCode) {
         'profileCode' => $shortCode,
     ]);
 })->name('profile.analytics');
+
+Route::get('/onboarding', function () {
+    return Inertia::render('Onboarding/FirstScreen');
+})->name('onboarding');
