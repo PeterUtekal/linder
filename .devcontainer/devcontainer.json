@@ -1,9 +1,16 @@
 {
   "name": "Linder",
-  "dockerComposeFile": "../docker-compose.yml",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "runServices": ["app", "nginx", "mongo"],
   "service": "app",
   "workspaceFolder": "/var/www/html",
   "forwardPorts": [8080],
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "moby": true,
+      "dockerCompose": true
+    }
+  },
   "extensions": [
     "bmewburn.vscode-intelephense-client",
     "esbenp.prettier-vscode",
