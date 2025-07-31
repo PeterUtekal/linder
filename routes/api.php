@@ -24,5 +24,5 @@ Route::post('/profiles/{slug}/swipe', [ProfileController::class, 'swipe']);
 // Contact submission
 Route::post('/profiles/{slug}/contact', [ContactController::class, 'submit']);
 
-// Pickup line generation
-Route::post('/generate-pickup-line', [PickupLineController::class, 'generate']);
+// Pickup line generation (with rate limiting)
+Route::post('/generate-pickup-line', [PickupLineController::class, 'generate'])->middleware('openai.ratelimit');
