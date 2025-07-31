@@ -18,4 +18,11 @@ class ProfileWebController extends Controller
 
         return view('profile', compact('profile'));
     }
+
+    public function contact(string $slug)
+    {
+        $profile = Profile::where('slug', $slug)->firstOrFail();
+
+        return view('contact', compact('profile'));
+    }
 }
