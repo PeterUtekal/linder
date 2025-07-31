@@ -37,6 +37,8 @@ return [
     // Buttons
     'btn_create' => 'Create Profile',
     'btn_creating' => 'Creating...',
+    'btn_nope' => 'Nope',
+    'btn_like' => 'Like',
     
     // Profile page
     'profile_wants_hangout' => 'wants to hang out!',
@@ -72,4 +74,22 @@ return [
     'add_home_copied' => 'Copied!',
     'btn_view_profile' => 'View My Profile',
     'btn_share' => 'Share Profile',
+    
+    // Contact page
+    'likes_you_too' => 'likes you too!',
+    'pickup_line_for_you' => 'Pickup line for you:',
+    'loading_pickup_line' => 'Generating your perfect pickup line...',
+    'regenerate' => 'New line',
+    'contact_now' => 'Contact Now!',
+    'call_now' => 'Call',
+    'whatsapp_now' => 'WhatsApp Message',
+    'whatsapp_message' => 'Hey :name! I saw your profile and would love to connect!',
+    'instagram_dm' => 'Send DM to',
+    'email_now' => 'Send Email',
+    'email_subject' => 'Hey :name! Let\'s connect',
+    'tips' => 'Pro Tips',
+    'tip_1' => 'Use the pickup line above to break the ice!',
+    'tip_2' => 'Be yourself and mention something from their profile',
+    'tip_3' => 'Suggest a specific time and place to meet',
+    'back_to_profile' => '← Back to profile',
 ];

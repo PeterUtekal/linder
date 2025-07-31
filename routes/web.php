@@ -10,4 +10,5 @@ Route::get('/add-to-home', function () {
     return view('add-to-home');
 });
 Route::get('/p/{slug}', [ProfileWebController::class, 'show']);
+Route::get('/p/{slug}/contact', [ProfileWebController::class, 'contact']);
 Route::get('/locale/{locale}', [LocaleController::class, 'switch'])->name('locale.switch');
