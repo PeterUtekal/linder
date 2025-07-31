@@ -131,11 +131,11 @@
                             <label class="label pb-1">
                                 <span class="label-text text-lg font-semibold">{{ __('app.how_to_notify') }}</span>
                             </label>
-                            <div class="btn-group w-full mb-4">
+                            <div class="btn-group btn-group-vertical sm:btn-group-horizontal w-full mb-4">
                                 <button type="button" 
                                         @click="form.notification_type = 'email'" 
-                                        :class="form.notification_type === 'email' ? 'btn-active' : ''"
-                                        class="btn btn-outline flex-1">
+                                        :class="form.notification_type === 'email' ? 'btn-active btn-primary' : ''"
+                                        class="btn flex-1">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                     </svg>
@@ -143,8 +143,8 @@
                                 </button>
                                 <button type="button" 
                                         @click="form.notification_type = 'sms'" 
-                                        :class="form.notification_type === 'sms' ? 'btn-active' : ''"
-                                        class="btn btn-outline flex-1">
+                                        :class="form.notification_type === 'sms' ? 'btn-active btn-primary' : ''"
+                                        class="btn flex-1">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                                     </svg>

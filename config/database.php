@@ -16,36 +16,22 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mongodb'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Database Connections
-    |--------------------------------------------------------------------------
-    |
-    | Below are all of the database connections defined for your application.
-    | An example configuration is provided for each database system which
-    | is supported by Laravel. You're free to add / remove connections.
-    |
-    */
-
-    'connections' => [
-
-        'sqlite' => [
-            'driver' => 'sqlite',
-            'url' => env('DB_URL'),
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
-            'prefix' => '',
-            'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
-            'busy_timeout' => null,
-            'journal_mode' => null,
-            'synchronous' => null,
+    'default' => env('DB_CONNECTION', 'mongodb" => [
+            "driver"   => "mongodb",
+            "host"     => env("DB_HOST", "127.0.0.1"),
+            "port"     => env("DB_PORT", 27017),
+            "database" => env("DB_DATABASE", "linkwme"),
+            "username" => env("DB_USERNAME", ""),
+            "password" => env("DB_PASSWORD", ""),
         ],
 
-        'mongodb' => [
-            'driver'   => 'mongodb',
-            'dsn'      => env('MONGO_DB_URI'),
-            'database' => env('MONGO_DB_DATABASE', 'viral_profiles'),
+        'mongodb" => [
+            "driver"   => "mongodb",
+            "host"     => env("DB_HOST", "127.0.0.1"),
+            "port"     => env("DB_PORT", 27017),
+            "database" => env("DB_DATABASE", "linkwme"),
+            "username" => env("DB_USERNAME", ""),
+            "password" => env("DB_PASSWORD", ""),
         ],
 
         'mysql' => [
