@@ -2,7 +2,7 @@
 
 return [
     // Main headings
-    'tagline' => 'Žiadne zdvorילostné reči.',
+    'tagline' => 'Žiadne zdvorilostné reči.',
     'tagline_just' => 'Len tvoj',
     'tagline_link' => 'link',
     'tagline_break' => 'Prelom ľady.',
