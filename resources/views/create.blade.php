@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="bumblebee">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="bumblebee">
 <head>
     <meta charset="UTF-8">
     <title>Create Profile</title>
@@ -122,9 +122,24 @@
                         </div>
                         <div class="form-control">
                             <label class="label pb-1">
+                                <span class="label-text text-lg font-semibold">Your age</span>
+                            </label>
+                            <input type="number" x-model="form.age" class="input input-bordered input-lg w-full" placeholder="Your age" min="18" max="100" required />
+                        </div>
+                        <div class="form-control">
+                            <label class="label pb-1">
                                 <span class="label-text text-lg font-semibold">Location</span>
                             </label>
-                            <input type="text" x-model="form.location" class="input input-bordered input-lg w-full" placeholder="Your location (optional)" />
+                            <div class="relative">
+                                <input type="text" x-model="form.location" class="input input-bordered input-lg w-full pr-12" placeholder="Your location (optional)" />
+                                <button type="button" @click="getLocation" :disabled="gettingLocation" class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-sm btn-circle btn-ghost">
+                                    <svg x-show="!gettingLocation" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                                    </svg>
+                                    <span x-show="gettingLocation" class="loading loading-spinner loading-xs"></span>
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -152,9 +167,43 @@ function profileForm() {
             contact_type: 'tel',
             contact_value: '',
             location: '',
+            age: '',
         },
         loading: false,
+        gettingLocation: false,
         link: '',
+        async getLocation() {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                return;
+            }
+            
+            this.gettingLocation = true;
+            
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    try {
+                        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
+                        const data = await response.json();
+                        
+                        // Extract city and country from the response
+                        const city = data.address.city || data.address.town || data.address.village || '';
+                        const country = data.address.country || '';
+                        
+                        this.form.location = city ? `${city}, ${country}` : country;
+                    } catch (error) {
+                        console.error('Error getting location name:', error);
+                        this.form.location = `${position.coords.latitude}, ${position.coords.longitude}`;
+                    }
+                    this.gettingLocation = false;
+                },
+                (error) => {
+                    console.error('Error getting location:', error);
+                    alert('Unable to get your location');
+                    this.gettingLocation = false;
+                }
+            );
+        },
         async submit() {
             this.loading = true;
             try {

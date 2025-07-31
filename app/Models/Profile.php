@@ -19,6 +19,7 @@ class Profile extends Model
         'contact_type',
         'contact_value',
         'location',
+        'age',
         'slug',
     ];
 

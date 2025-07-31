@@ -49,7 +49,7 @@
                 <!-- Name and age at bottom of photo -->
                 <div class="absolute bottom-4 left-4 right-4">
                     <h2 class="text-white text-2xl font-bold mb-1">
-                        {{ $profile->name }} wants to hang out!
+                        {{ $profile->name }}@if($profile->age), {{ $profile->age }}@endif wants to hang out!
                     </h2>
                 </div>
                 
@@ -70,6 +70,15 @@
             <div class="p-6">
                 <div class="mb-4">
                     <p class="text-gray-700 text-base leading-relaxed">{{ $profile->message }}</p>
+                    @if($profile->location)
+                        <p class="text-gray-500 text-sm mt-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 inline-block mr-1">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg>
+                            {{ $profile->location }}
+                        </p>
+                    @endif
                 </div>
                 
                 <!-- Contact reveal section -->
