@@ -1,61 +1,109 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Linder - AI-Powered Dating Profile App
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A viral Tinder-like application that generates dynamic pickup lines and profile descriptions using OpenAI's GPT models.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **AI-Powered Pickup Lines**: Generate personalized pickup lines using OpenAI's GPT models
+- **Dynamic Profile Descriptions**: Create engaging bio lines for dating profiles
+- **MongoDB Integration**: Store profiles and user data in MongoDB
+- **Responsive UI**: Built with daisyUI and Tailwind CSS
+- **Real-time Interactions**: Livewire components for seamless user experience
+- **Caching**: Smart caching system to optimize API usage and performance
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## OpenAI Integration
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+This application uses OpenAI's GPT models to generate creative and personalized content:
 
-## Learning Laravel
+### Setup
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. **Install Dependencies**
+   ```bash
+   composer install
+   ```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+2. **Environment Configuration**
+   Copy `.env.example` to `.env` and add your OpenAI credentials:
+   ```env
+   OPENAI_API_KEY=your_openai_api_key_here
+   OPENAI_ORGANIZATION=your_org_id_here
+   OPENAI_DEFAULT_MODEL=gpt-3.5-turbo
+   OPENAI_MAX_TOKENS=150
+   OPENAI_TEMPERATURE=0.9
+   OPENAI_CACHE_TTL=3600
+   ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+3. **Test OpenAI Integration**
+   ```bash
+   php artisan openai:test --name="Sarah" --age=25 --location="New York"
+   ```
 
-## Laravel Sponsors
+### API Usage
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+**Generate Pickup Line**
+```bash
+POST /api/generate-pickup-line
+Content-Type: application/json
 
-### Premium Partners
+{
+    "name": "Sarah",
+    "age": 25,
+    "location": "New York",
+    "for_self": false
+}
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+**Generate Self Description**
+```bash
+POST /api/generate-pickup-line
+Content-Type: application/json
+
+{
+    "name": "John",
+    "age": 28,
+    "location": "San Francisco",
+    "for_self": true
+}
+```
+
+### Features
+
+- **Smart Caching**: Reduces API costs by caching responses for 1 hour
+- **Fallback System**: Uses predefined lines when OpenAI is unavailable
+- **Configurable Models**: Switch between GPT-3.5-turbo, GPT-4, etc.
+- **Temperature Control**: Adjust creativity levels for different content types
+- **Error Handling**: Graceful degradation with logging
+
+### Service Architecture
+
+The OpenAI integration is built around the `OpenAIService` class which provides:
+
+- `generatePickupLine($name, $age, $location)` - Creates personalized pickup lines
+- `generateSelfDescriptionLine($age, $location)` - Generates profile bio lines
+- Automatic caching and error handling
+- Configurable prompts and parameters
+
+## Technologies Used
+
+- **Laravel 12** - PHP framework
+- **MongoDB** - Database
+- **OpenAI PHP SDK** - AI integration
+- **Livewire** - Reactive components
+- **daisyUI + Tailwind CSS** - UI framework
+- **AWS S3** - File storage
+
+## Installation
+
+1. Clone the repository
+2. Install dependencies: `composer install && npm install`
+3. Set up environment variables in `.env`
+4. Run migrations: `php artisan migrate`
+5. Start the development server: `php artisan serve`
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Thank you for considering contributing to Linder! Please ensure all AI-generated content follows ethical guidelines and maintains respectful, appropriate messaging.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The Linder application is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

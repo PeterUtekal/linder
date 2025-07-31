@@ -131,46 +131,11 @@
                             <label class="label pb-1">
                                 <span class="label-text text-lg font-semibold">{{ __('app.how_to_notify') }}</span>
                             </label>
-                            <div class="flex w-full mb-4 gap-2">
-                                <button type="button"
-                                        @click="form.contact_type = 'email'"
-                                        :class="form.contact_type === 'email' ? 'btn-primary' : 'btn-ghost'"
-                                        class="btn w-1/2">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                    </svg>
-                                    Email
-                                </button>
-                                <button type="button"
-                                        @click="form.contact_type = 'sms'"
-                                        :class="form.contact_type === 'sms' ? 'btn-primary' : 'btn-ghost'"
-                                        class="btn w-1/2">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                    </svg>
-                                    SMS
-                                </button>
-                            </div>
-                            
-                            <div x-show="form.contact_type === 'email'" class="form-control">
-                                <input type="email" 
-                                       x-model="form.contact_value" 
-                                       class="input input-bordered input-lg w-full" 
-                                       placeholder="{{ __('app.email_placeholder') }}" 
-                                       :required="form.contact_type === 'email'" />
-                            </div>
-                            
-                            <div x-show="form.contact_type === 'sms'" class="form-control">
-                                <input type="tel" 
-                                       x-model="form.contact_value" 
-                                       class="input input-bordered input-lg w-full" 
-                                       placeholder="{{ __('app.phone_placeholder') }}" 
-                                       :required="form.contact_type === 'sms'" />
-                            </div>
-                            
-                            <!-- <label class="label">
-                                <span class="label-text-alt">{{ __('app.notification_explanation') }}</span>
-                            </label> -->
+                            <input type="tel"
+                                   x-model="form.contact_value"
+                                   class="input input-bordered input-lg w-full"
+                                   placeholder="{{ __('app.phone_placeholder') }}"
+                                   required />
                         </div>
                         <div class="form-control">
                             <label class="label pb-1">
@@ -246,12 +211,17 @@ function profileForm() {
                     })
                 });
                 
+                const data = await response.json();
+                
                 if (response.ok) {
-                    const data = await response.json();
                     this.form.message = data.pickup_line;
+                } else {
+                    console.error('API Error:', data);
+                    alert('Error generating pickup line: ' + (data.message || data.error || 'Unknown error'));
                 }
             } catch (error) {
                 console.error('Error generating pickup line:', error);
+                alert('Error generating pickup line: ' + error.message);
             }
             this.loadingPickupLine = false;
         },

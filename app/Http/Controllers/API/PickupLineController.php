@@ -3,60 +3,64 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Services\OpenAIService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class PickupLineController extends Controller
 {
+    public function __construct(
+        private OpenAIService $openAIService
+    ) {}
+
     public function generate(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'age' => 'nullable|integer|min:18|max:100',
-            'location' => 'nullable|string|max:255',
-            'for_self' => 'nullable|boolean'
-        ]);
+        try {
+            Log::info('PickupLine generation started', ['request' => $request->all()]);
+            
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'age' => 'nullable|integer|min:18|max:100',
+                'location' => 'nullable|string|max:255',
+                'for_self' => 'nullable|boolean'
+            ]);
 
-        $name = $validated['name'];
-        $forSelf = $validated['for_self'] ?? false;
+            Log::info('Request validated', ['validated' => $validated]);
 
-        $pickupLine = $forSelf 
-            ? $this->getSelfDescriptionLine() 
-            : $this->getPickupLineForName($name);
+            $name = $validated['name'];
+            $age = $validated['age'] ?? null;
+            $location = $validated['location'] ?? null;
+            $forSelf = $validated['for_self'] ?? false;
 
-        return response()->json([
-            'pickup_line' => $pickupLine
-        ]);
-    }
+            Log::info('Calling OpenAI service', [
+                'name' => $name,
+                'age' => $age,
+                'location' => $location,
+                'for_self' => $forSelf
+            ]);
 
-    private function getPickupLineForName(string $name): string
-    {
-        $lines = [
-            "Hey {$name}, are you a magician? Because whenever I look at your profile, everyone else disappears! ✨",
-            "Is your name Wi-Fi? Because I'm really feeling a connection with you, {$name}! 📶",
-            "{$name}, do you believe in love at first swipe? Or should I swipe right again? 😉",
-            "Are you a time traveler, {$name}? Because I can see you in my future! ⏰",
-            "If you were a vegetable, {$name}, you'd be a cute-cumber! 🥒",
-            "Excuse me {$name}, but I think you dropped something: my jaw! 😮",
-            "Are you made of copper and tellurium? Because you're Cu-Te, {$name}! 🧪",
-            "{$name}, on a scale of 1 to 10, you're a 9 and I'm the 1 you need! 💯"
-        ];
+            $pickupLine = $forSelf 
+                ? $this->openAIService->generateSelfDescriptionLine($age, $location)
+                : $this->openAIService->generatePickupLine($name, $age, $location);
 
-        return $lines[array_rand($lines)];
-    }
+            Log::info('OpenAI service completed', ['pickup_line' => $pickupLine]);
 
-    private function getSelfDescriptionLine(): string
-    {
-        $lines = [
-            "Looking for someone who appreciates good conversation and bad jokes! 😄",
-            "Swipe right if you think pineapple belongs on pizza! 🍕",
-            "Let's skip the small talk and plan our first adventure! 🗺️",
-            "Professional overthinker seeking someone to distract me! 🤔",
-            "Warning: May spontaneously suggest midnight ice cream runs! 🍦",
-            "Life's too short for boring conversations. Let's make it interesting! ✨",
-            "Looking for my partner in wine... I mean crime! 🍷",
-            "Fluent in sarcasm and movie quotes. You've been warned! 🎬"
-        ];
-
-        return $lines[array_rand($lines)];
+            return response()->json([
+                'pickup_line' => $pickupLine
+            ]);
+            
+        } catch (Exception $e) {
+            Log::error('PickupLine generation failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all()
+            ]);
+            
+            return response()->json([
+                'error' => 'Failed to generate pickup line',
+                'message' => config('app.debug') ? $e->getMessage() : 'Internal server error'
+            ], 500);
+        }
     }
 }
