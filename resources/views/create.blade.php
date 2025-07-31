@@ -13,8 +13,8 @@
 </head>
 <body class="bg-base-200">
 <div x-data="profileForm()" class="hero min-h-screen bg-base-200">
-    <div class="hero-content flex-col lg:flex-row-reverse p-4">
-        <div class="card w-full max-w-md bg-base-100 shadow-2xl">
+    <div class="hero-content flex-col lg:flex-row-reverse p-0 rounded-none">
+        <div class="card w-full max-w-md bg-base-100 rounded-none">
             <div class="card-body">
                 <h2 class="card-title text-4xl font-extrabold leading-tight mb-3 text-center">Drop Your Link. Meet The Club.</h2>
                 <p class="text-sm uppercase tracking-wider font-semibold text-primary text-center mb-4">30&nbsp;seconds • 3&nbsp;steps • Unlimited&nbsp;connections</p>
@@ -24,20 +24,20 @@
                 </p>
                 <form @submit.prevent="submit" class="flex flex-col gap-2">
                     <fieldset class="fieldset p-0 border-0">
-                        <legend class="fieldset-legend text-lg font-semibold mb-2">What is your name?</legend>
+                        <legend class="fieldset-legend text-lg font-semibold">What is your name?</legend>
                         <input type="text" x-model="form.name" class="input input-bordered input-lg w-full" placeholder="Type your name" required />
                     </fieldset>
                     <fieldset class="fieldset p-0 border-0">
-                        <legend class="fieldset-legend text-lg font-semibold mb-2">Upload your photo</legend>
+                        <legend class="fieldset-legend text-lg font-semibold">Upload your photo</legend>
                         <input type="file" @change="e => form.photo = e.target.files[0]" accept="image/*" class="file-input file-input-bordered file-input-lg w-full" />
                     </fieldset>
                     <fieldset class="fieldset p-0 border-0">
-                        <legend class="fieldset-legend text-lg font-semibold mb-2">Your message</legend>
+                        <legend class="fieldset-legend text-lg font-semibold">Your message</legend>
                         <textarea x-model="form.message" class="textarea textarea-bordered textarea-lg w-full" placeholder="Your personal message"></textarea>
                     </fieldset>
                     <div class="flex gap-4">
                         <fieldset class="fieldset flex-1 p-0 border-0">
-                            <legend class="fieldset-legend text-lg font-semibold mb-2">Contact Type</legend>
+                            <legend class="fieldset-legend text-lg font-semibold">Contact Type</legend>
                             <select x-model="form.contact_type" class="select select-bordered select-lg w-full" required>
                                 <option value="tel">Phone</option>
                                 <option value="whatsapp">WhatsApp</option>
@@ -46,12 +46,12 @@
                             </select>
                         </fieldset>
                         <fieldset class="fieldset flex-1 p-0 border-0">
-                            <legend class="fieldset-legend text-lg font-semibold mb-2">Contact Value</legend>
+                            <legend class="fieldset-legend text-lg font-semibold">Contact Value</legend>
                             <input type="text" x-model="form.contact_value" class="input input-bordered input-lg w-full" placeholder="Your contact info" required />
                         </fieldset>
                     </div>
                     <fieldset class="fieldset p-0 border-0">
-                        <legend class="fieldset-legend text-lg font-semibold mb-2">Location</legend>
+                        <legend class="fieldset-legend text-lg font-semibold">Location</legend>
                         <input type="text" x-model="form.location" class="input input-bordered input-lg w-full" placeholder="Your location (optional)" />
                     </fieldset>
                     <button type="submit" :disabled="loading" class="btn btn-primary btn-lg w-full mt-2">
@@ -75,7 +75,7 @@
                             • Choose <span class="font-bold">“Add&nbsp;to&nbsp;Home&nbsp;Screen”</span><br>
                             • Open it anytime and <span class="font-bold">Airdrop</span> to new friends
                         </p>
-                        <div class="flex flex-wrap gap-2 justify-center mb-2">
+                        <div class="flex flex-wrap gap-2 justify-center">
                             <button type="button" class="btn btn-outline btn-primary btn-sm" @click="navigator.clipboard.writeText(link);$el.innerText='Copied!'">Copy Link</button>
                             <button type="button" x-show="!!navigator.share" class="btn btn-primary btn-sm" @click="navigator.share({title:'Check my link',url:link}).catch(()=>{})">Share…</button>
                         </div>
