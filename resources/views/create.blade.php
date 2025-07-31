@@ -126,24 +126,15 @@
                             </label>
                             <textarea x-model="form.message" class="textarea textarea-bordered textarea-lg w-full" placeholder="{{ __('app.form_message_placeholder') }}" rows="3"></textarea>
                         </div>
-                        <div class="flex gap-4">
-                            <div class="form-control flex-1">
-                                <label class="label pb-1">
-                                    <span class="label-text text-lg font-semibold">{{ __('app.form_contact_type') }}</span>
-                                </label>
-                                <select x-model="form.contact_type" class="select select-bordered select-lg w-full" required>
-                                    <option value="tel">{{ __('app.contact_phone') }}</option>
-                                    <option value="whatsapp">{{ __('app.contact_whatsapp') }}</option>
-                                    <option value="instagram">{{ __('app.contact_instagram') }}</option>
-                                    <option value="email">{{ __('app.contact_email') }}</option>
-                                </select>
-                            </div>
-                            <div class="form-control flex-1">
-                                <label class="label pb-1">
-                                    <span class="label-text text-lg font-semibold">{{ __('app.form_contact_value') }}</span>
-                                </label>
-                                <input type="text" x-model="form.contact_value" class="input input-bordered input-lg w-full" placeholder="{{ __('app.form_contact_placeholder') }}" required />
-                            </div>
+                        <div class="form-control">
+                            <label class="label pb-1">
+                                <span class="label-text text-lg font-semibold">{{ __('app.form_phone_number') }}</span>
+                                <span class="label-text-alt text-gray-500">{{ __('app.phone_privacy_note') }}</span>
+                            </label>
+                            <input type="tel" x-model="form.phone" class="input input-bordered input-lg w-full" placeholder="{{ __('app.phone_placeholder') }}" required />
+                            <label class="label">
+                                <span class="label-text-alt">{{ __('app.phone_explanation') }}</span>
+                            </label>
                         </div>
                         <div class="form-control">
                             <label class="label pb-1">
@@ -189,8 +180,7 @@ function profileForm() {
             name: '',
             photo: null,
             message: '',
-            contact_type: 'tel',
-            contact_value: '',
+            phone: '',
             location: '',
             age: '',
         },
