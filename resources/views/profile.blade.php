@@ -86,32 +86,32 @@
         </div>
         
         <!-- Tinder-style action buttons -->
-        <div class="flex justify-center gap-6 mt-6">
-            <div class="flex flex-col items-center gap-2">
-                <button class="btn btn-circle btn-lg bg-white hover:bg-gray-50 border-2 border-gray-200 shadow-lg" 
+        <div class="flex justify-center gap-3 sm:gap-3 sm:gap-6 mt-6">
+            <div class="flex flex-col items-center gap-1">
+                <button class="btn btn-circle btn-md sm:btn-lg bg-white hover:bg-gray-50 border-2 border-gray-200 shadow-lg" 
                         @click="swipeLeft()">
-                    <svg class="w-8 h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-6 h-6 sm:w-8 sm:h-8 text-red-500" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
                     </svg>
                 </button>
-                <span class="text-sm font-semibold text-gray-600">{{ __('app.btn_nope') }}</span>
+                <span class="text-xs sm:text-xs sm:text-sm font-semibold text-gray-600">{{ __('app.btn_nope') }}</span>
             </div>
             
-            <div class="flex flex-col items-center gap-2">
-                <button class="btn btn-circle btn-lg bg-white hover:bg-gray-50 border-2 border-gray-200 shadow-lg" 
+            <div class="flex flex-col items-center gap-1">
+                <button class="btn btn-circle btn-md sm:btn-lg bg-white hover:bg-gray-50 border-2 border-gray-200 shadow-lg" 
                         @click="copyLink()" x-text="copied ? '✓' : '🔗'">
                 </button>
-                <span class="text-sm font-semibold text-gray-600">{{ __('app.btn_share') }}</span>
+                <span class="text-xs sm:text-xs sm:text-sm font-semibold text-gray-600">{{ __('app.btn_share') }}</span>
             </div>
             
-            <div class="flex flex-col items-center gap-2">
-                <button class="btn btn-circle btn-lg bg-white hover:bg-gray-50 border-2 border-gray-200 shadow-lg" 
+            <div class="flex flex-col items-center gap-1">
+                <button class="btn btn-circle btn-md sm:btn-lg bg-white hover:bg-gray-50 border-2 border-gray-200 shadow-lg" 
                         @click="swipeRight()">
-                    <svg class="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-6 h-6 sm:w-8 sm:h-8 text-green-500" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5 2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
                     </svg>
                 </button>
-                <span class="text-sm font-semibold text-gray-600">{{ __('app.btn_like') }}</span>
+                <span class="text-xs sm:text-xs sm:text-sm font-semibold text-gray-600">{{ __('app.btn_like') }}</span>
             </div>
         </div>
         

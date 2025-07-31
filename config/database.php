@@ -16,22 +16,14 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mongodb" => [
-            "driver"   => "mongodb",
-            "host"     => env("DB_HOST", "127.0.0.1"),
-            "port"     => env("DB_PORT", 27017),
-            "database" => env("DB_DATABASE", "linkwme"),
-            "username" => env("DB_USERNAME", ""),
-            "password" => env("DB_PASSWORD", ""),
-        ],
+    'default' => env('DB_CONNECTION', 'mongodb'),
 
-        'mongodb" => [
-            "driver"   => "mongodb",
-            "host"     => env("DB_HOST", "127.0.0.1"),
-            "port"     => env("DB_PORT", 27017),
-            "database" => env("DB_DATABASE", "linkwme"),
-            "username" => env("DB_USERNAME", ""),
-            "password" => env("DB_PASSWORD", ""),
+    'connections' => [
+
+        'mongodb' => [
+            'driver'   => 'mongodb',
+            'dsn'      => env('MONGO_DB_URI'),
+            'database' => env('MONGO_DB_DATABASE', 'viral_profiles'),
         ],
 
         'mysql' => [
