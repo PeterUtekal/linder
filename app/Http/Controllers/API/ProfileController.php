@@ -5,27 +5,18 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Profile;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\StoreProfileRequest;
+use App\Services\ProfileService;
 
 class ProfileController extends Controller
 {
-    public function store(Request $request)
+    public function __construct(
+        private ProfileService $profileService
+    ) {}
+
+    public function store(StoreProfileRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'photo' => 'nullable|image|max:2048',
-            'message' => 'nullable|string|max:500',
-            'contact_type' => 'required|string|max:50',
-            'contact_value' => 'required|string|max:255',
-            'location' => 'nullable|string|max:255',
-        ]);
-
-        if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('public/photos');
-            $validated['photo_url'] = Storage::url($path);
-        }
-
-        $profile = Profile::create($validated);
+        $profile = $this->profileService->create($request->validated());
 
         return response()->json([
             'slug' => $profile->slug,
@@ -41,7 +32,8 @@ class ProfileController extends Controller
             'name' => $profile->name,
             'photo_url' => $profile->photo_url,
             'message' => $profile->message,
-            'location' => $profile->locaction,
+            'location' => $profile->location,
+            'age' => $profile->age,
             'slug' => $profile->slug,
         ]);
     }
@@ -53,17 +45,17 @@ class ProfileController extends Controller
         ]);
 
         $profile = Profile::where('slug', $slug)->firstOrFail();
+        
+        $result = $this->profileService->recordSwipe(
+            $profile,
+            $validated['direction'],
+            $request->ip()
+        );
 
-        $profile->push('swipes', [
-            'direction'   => $validated['direction'],
-            'ip'          => $request->ip(),
-            'created_at'  => now(),
-        ]);
-
-        if ($validated['direction'] === 'right') {
+        if ($result['matched']) {
             return response()->json([
-                'contact_type' => $profile->contact_type,
-                'contact_value' => $profile->contact_value,
+                'contact_type' => $result['contact_type'],
+                'contact_value' => $result['contact_value'],
             ]);
         }
 

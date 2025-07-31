@@ -19,6 +19,7 @@ class Profile extends Model
         'contact_type',
         'contact_value',
         'location',
+        'age',
         'slug',
     ];
 
@@ -33,8 +34,10 @@ class Profile extends Model
 
     protected static function generateUniqueSlug(): string
     {
+        $length = config('linkwme.profile.slug_length', 6);
+        
         do {
-            $slug = Str::lower(Str::random(6));
+            $slug = Str::lower(Str::random($length));
         } while (self::where('slug', $slug)->exists());
 
         return $slug;

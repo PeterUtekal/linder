@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="bumblebee">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="bumblebee">
 <head>
     <meta charset="UTF-8">
     <title>Create Profile</title>
@@ -12,18 +12,37 @@
 
 </head>
 <body class="bg-base-100 h-screen overflow-hidden">
+<!-- Language Switcher -->
+<div class="absolute top-4 right-4 z-10">
+    <div class="dropdown dropdown-end">
+        <label tabindex="0" class="btn btn-sm btn-ghost">
+            @if(app()->getLocale() == 'sk')
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 2v6H6.83a8.005 8.005 0 0 1 10.34 0H12zm0 8h5.17a8.005 8.005 0 0 1-10.34 0H12zm0-2V4a8 8 0 0 1 0 16v-6z"/></svg>
+                SK
+            @else
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/></svg>
+                EN
+            @endif
+            <svg class="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/></svg>
+        </label>
+        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-32">
+            <li><a href="{{ route('locale.switch', 'en') }}">🇬🇧 English</a></li>
+            <li><a href="{{ route('locale.switch', 'sk') }}">🇸🇰 Slovenčina</a></li>
+        </ul>
+    </div>
+</div>
 <div x-data="profileForm()" class="h-screen flex flex-col">
     <!-- Scrollable content area -->
     <div class="flex-1 overflow-y-auto">
         <div class="hero min-h-full bg-base-100">
             <div class="hero-content flex-col lg:flex-row-reverse p-4 w-full max-w-md mt-12">
                 <div class="w-full">
-                    <h2 class="text-5xl font-extrabold leading-tight mb-3 text-center">No small talk. <br> Just your <span class="text-primary">link</span>. <br> <span class="underline decoration-primary">Break the ice.</span></h2>
-                     <p class="text-sm uppercase tracking-wider font-semibold text-primary text-center mb-4">30&nbsp;seconds • 3&nbsp;steps • Unlimited&nbsp;connections</p>
+                    <h2 class="text-5xl font-extrabold leading-tight mb-3 text-center">{{ __('app.tagline') }} <br> {{ __('app.tagline_just') }} <span class="text-primary">{{ __('app.tagline_link') }}</span>. <br> <span class="underline decoration-primary">{{ __('app.tagline_break') }}</span></h2>
+                     <p class="text-sm uppercase tracking-wider font-semibold text-primary text-center mb-4">{{ __('app.subtitle') }}</p>
                 
                     <ul class="timeline timeline-vertical mb-6 mt-5">
                         <li>
-                            <div class="timeline-start timeline-box">Create Profile</div>
+                            <div class="timeline-start timeline-box">{{ __('app.step_create') }}</div>
                             <div class="timeline-middle">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -56,12 +75,12 @@
                                     />
                                 </svg>
                             </div>
-                            <div class="timeline-end timeline-box">Add to Home Screen</div>
+                            <div class="timeline-end timeline-box">{{ __('app.step_add_home') }}</div>
                             <hr class="bg-primary" />
                         </li>
                         <li>
                             <hr class="bg-primary" />
-                            <div class="timeline-start timeline-box">Airdrop to the room</div>
+                            <div class="timeline-start timeline-box">{{ __('app.step_airdrop') }}</div>
                             <div class="timeline-middle">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -80,51 +99,66 @@
                     </ul>
                     
                     <p class="mb-6 text-base-content/70 leading-relaxed text-center">
-                        That's it – let the connections roll in. 🍸
+                        {{ __('app.step_complete') }}
                     </p>
                     <form id="profileForm" @submit.prevent="submit" class="flex flex-col gap-4 pb-4">
                         <div class="form-control">
                             <label class="label pb-1">
-                                <span class="label-text text-lg font-semibold">What is your name?</span>
+                                <span class="label-text text-lg font-semibold">{{ __('app.form_name') }}</span>
                             </label>
-                            <input type="text" x-model="form.name" class="input input-bordered input-lg w-full" placeholder="Type your name" required />
+                            <input type="text" x-model="form.name" class="input input-bordered input-lg w-full" placeholder="{{ __('app.form_name_placeholder') }}" required />
                         </div>
                         <div class="form-control">
                             <label class="label pb-1">
-                                <span class="label-text text-lg font-semibold">Upload your photo</span>
+                                <span class="label-text text-lg font-semibold">{{ __('app.form_photo') }}</span>
                             </label>
                             <input type="file" @change="e => form.photo = e.target.files[0]" accept="image/*" class="file-input file-input-bordered file-input-lg w-full" />
                         </div>
                         <div class="form-control">
                             <label class="label pb-1">
-                                <span class="label-text text-lg font-semibold">Your message</span>
+                                <span class="label-text text-lg font-semibold">{{ __('app.form_message') }}</span>
                             </label>
-                            <textarea x-model="form.message" class="textarea textarea-bordered textarea-lg w-full" placeholder="Your personal message"></textarea>
+                            <textarea x-model="form.message" class="textarea textarea-bordered textarea-lg w-full" placeholder="{{ __('app.form_message_placeholder') }}"></textarea>
                         </div>
                         <div class="flex gap-4">
                             <div class="form-control flex-1">
                                 <label class="label pb-1">
-                                    <span class="label-text text-lg font-semibold">Contact Type</span>
+                                    <span class="label-text text-lg font-semibold">{{ __('app.form_contact_type') }}</span>
                                 </label>
                                 <select x-model="form.contact_type" class="select select-bordered select-lg w-full" required>
-                                    <option value="tel">Phone</option>
-                                    <option value="whatsapp">WhatsApp</option>
-                                    <option value="instagram">Instagram</option>
-                                    <option value="email">Email</option>
+                                    <option value="tel">{{ __('app.contact_phone') }}</option>
+                                    <option value="whatsapp">{{ __('app.contact_whatsapp') }}</option>
+                                    <option value="instagram">{{ __('app.contact_instagram') }}</option>
+                                    <option value="email">{{ __('app.contact_email') }}</option>
                                 </select>
                             </div>
                             <div class="form-control flex-1">
                                 <label class="label pb-1">
-                                    <span class="label-text text-lg font-semibold">Contact Value</span>
+                                    <span class="label-text text-lg font-semibold">{{ __('app.form_contact_value') }}</span>
                                 </label>
-                                <input type="text" x-model="form.contact_value" class="input input-bordered input-lg w-full" placeholder="Your contact info" required />
+                                <input type="text" x-model="form.contact_value" class="input input-bordered input-lg w-full" placeholder="{{ __('app.form_contact_placeholder') }}" required />
                             </div>
                         </div>
                         <div class="form-control">
                             <label class="label pb-1">
-                                <span class="label-text text-lg font-semibold">Location</span>
+                                <span class="label-text text-lg font-semibold">{{ __('app.form_age') }}</span>
                             </label>
-                            <input type="text" x-model="form.location" class="input input-bordered input-lg w-full" placeholder="Your location (optional)" />
+                            <input type="number" x-model="form.age" class="input input-bordered input-lg w-full" placeholder="{{ __('app.form_age_placeholder') }}" min="18" max="100" required />
+                        </div>
+                        <div class="form-control">
+                            <label class="label pb-1">
+                                <span class="label-text text-lg font-semibold">{{ __('app.form_location') }}</span>
+                            </label>
+                            <div class="relative">
+                                <input type="text" x-model="form.location" class="input input-bordered input-lg w-full pr-12" placeholder="{{ __('app.form_location_placeholder') }}" />
+                                <button type="button" @click="getLocation" :disabled="gettingLocation" class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-sm btn-circle btn-ghost">
+                                    <svg x-show="!gettingLocation" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                                    </svg>
+                                    <span x-show="gettingLocation" class="loading loading-spinner loading-xs"></span>
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -136,7 +170,7 @@
     <div class="p-4 bg-base-100 border-t border-base-300">
         <div class="w-full max-w-md mx-auto">
             <button type="submit" form="profileForm" :disabled="loading" class="btn btn-primary btn-lg w-full">
-                <span x-text="loading ? 'Creating...' : 'Create Profile'"></span>
+                <span x-text="loading ? '{{ __('app.btn_creating') }}' : '{{ __('app.btn_create') }}'"></span>
             </button>
         </div>
     </div>
@@ -152,9 +186,43 @@ function profileForm() {
             contact_type: 'tel',
             contact_value: '',
             location: '',
+            age: '',
         },
         loading: false,
+        gettingLocation: false,
         link: '',
+        async getLocation() {
+            if (!navigator.geolocation) {
+                alert('{{ __('app.error_location_support') }}');
+                return;
+            }
+            
+            this.gettingLocation = true;
+            
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    try {
+                        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.coords.latitude}&lon=${position.coords.longitude}`);
+                        const data = await response.json();
+                        
+                        // Extract city and country from the response
+                        const city = data.address.city || data.address.town || data.address.village || '';
+                        const country = data.address.country || '';
+                        
+                        this.form.location = city ? `${city}, ${country}` : country;
+                    } catch (error) {
+                        console.error('Error getting location name:', error);
+                        this.form.location = `${position.coords.latitude}, ${position.coords.longitude}`;
+                    }
+                    this.gettingLocation = false;
+                },
+                (error) => {
+                    console.error('Error getting location:', error);
+                    alert('{{ __('app.error_location_fetch') }}');
+                    this.gettingLocation = false;
+                }
+            );
+        },
         async submit() {
             this.loading = true;
             try {
@@ -171,9 +239,9 @@ function profileForm() {
                 
                 // Redirect to add-to-home page with the profile URL
                 window.location.href = `/add-to-home?url=${encodeURIComponent(data.url)}`;
-            } catch (err) {
-                alert('Error creating profile');
-            } finally {
+                            } catch (err) {
+                    alert('{{ __('app.error_create') }}');
+                } finally {
                 this.loading = false;
             }
         }
