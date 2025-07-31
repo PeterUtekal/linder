@@ -41,7 +41,7 @@ class ProfileController extends Controller
             'name' => $profile->name,
             'photo_url' => $profile->photo_url,
             'message' => $profile->message,
-            'location' => $profile->location,
+            'location' => $profile->locaction,
             'slug' => $profile->slug,
         ]);
     }
