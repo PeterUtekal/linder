@@ -42,4 +42,12 @@ class Profile extends Model
 
         return $slug;
     }
+
+    /**
+     * Get the contacts for this profile
+     */
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class);
+    }
 }

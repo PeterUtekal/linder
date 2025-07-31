@@ -4,88 +4,59 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use OpenAI;
 
 class PickupLineController extends Controller
 {
     public function generate(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'age' => 'nullable|integer',
-            'location' => 'nullable|string',
-            'message' => 'nullable|string',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'age' => 'nullable|integer|min:18|max:100',
+            'location' => 'nullable|string|max:255',
+            'for_self' => 'nullable|boolean'
         ]);
 
-        try {
-            $apiKey = config('services.openai.key');
-            
-            if (!$apiKey) {
-                // Return a default pickup line if OpenAI is not configured
-                return response()->json([
-                    'pickup_line' => $this->getDefaultPickupLine($request->name)
-                ]);
-            }
+        $name = $validated['name'];
+        $forSelf = $validated['for_self'] ?? false;
 
-            $client = OpenAI::client($apiKey);
-            
-            $prompt = $this->buildPrompt($request);
-            
-            $response = $client->chat()->create([
-                'model' => 'gpt-3.5-turbo',
-                'messages' => [
-                    ['role' => 'system', 'content' => 'You are a witty and charming assistant that creates personalized, fun, and respectful pickup lines. Keep them light-hearted, creative, and appropriate.'],
-                    ['role' => 'user', 'content' => $prompt]
-                ],
-                'max_tokens' => 100,
-                'temperature' => 0.8,
-            ]);
+        $pickupLine = $forSelf 
+            ? $this->getSelfDescriptionLine() 
+            : $this->getPickupLineForName($name);
 
-            $pickupLine = $response['choices'][0]['message']['content'];
-            
-            return response()->json([
-                'pickup_line' => trim($pickupLine)
-            ]);
-            
-        } catch (\Exception $e) {
-            // Fallback to default pickup line on error
-            return response()->json([
-                'pickup_line' => $this->getDefaultPickupLine($request->name)
-            ]);
-        }
+        return response()->json([
+            'pickup_line' => $pickupLine
+        ]);
     }
 
-    private function buildPrompt(Request $request): string
-    {
-        $prompt = "Create a fun and charming pickup line for someone named {$request->name}";
-        
-        if ($request->age) {
-            $prompt .= " who is {$request->age} years old";
-        }
-        
-        if ($request->location) {
-            $prompt .= " from {$request->location}";
-        }
-        
-        if ($request->message) {
-            $prompt .= ". Their profile says: \"{$request->message}\"";
-        }
-        
-        $prompt .= ". Make it personalized, creative, and respectful. Keep it under 30 words.";
-        
-        return $prompt;
-    }
-
-    private function getDefaultPickupLine(string $name): string
+    private function getPickupLineForName(string $name): string
     {
         $lines = [
             "Hey {$name}, are you a magician? Because whenever I look at your profile, everyone else disappears! ✨",
             "Is your name Wi-Fi? Because I'm really feeling a connection with you, {$name}! 📶",
             "{$name}, do you believe in love at first swipe? Or should I swipe right again? 😉",
             "Are you a time traveler, {$name}? Because I can see you in my future! ⏰",
-            "If you were a vegetable, {$name}, you'd be a cute-cumber! 🥒"
+            "If you were a vegetable, {$name}, you'd be a cute-cumber! 🥒",
+            "Excuse me {$name}, but I think you dropped something: my jaw! 😮",
+            "Are you made of copper and tellurium? Because you're Cu-Te, {$name}! 🧪",
+            "{$name}, on a scale of 1 to 10, you're a 9 and I'm the 1 you need! 💯"
         ];
-        
+
+        return $lines[array_rand($lines)];
+    }
+
+    private function getSelfDescriptionLine(): string
+    {
+        $lines = [
+            "Looking for someone who appreciates good conversation and bad jokes! 😄",
+            "Swipe right if you think pineapple belongs on pizza! 🍕",
+            "Let's skip the small talk and plan our first adventure! 🗺️",
+            "Professional overthinker seeking someone to distract me! 🤔",
+            "Warning: May spontaneously suggest midnight ice cream runs! 🍦",
+            "Life's too short for boring conversations. Let's make it interesting! ✨",
+            "Looking for my partner in wine... I mean crime! 🍷",
+            "Fluent in sarcasm and movie quotes. You've been warned! 🎬"
+        ];
+
         return $lines[array_rand($lines)];
     }
 }
