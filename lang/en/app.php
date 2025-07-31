@@ -77,7 +77,7 @@ return [
     'suggest_pickup_line' => 'Suggest',
     'suggesting' => 'Generating...',
     'enter_name_first' => 'Please enter your name first',
-    'how_to_notify' => 'How should we notify you when someone likes you?',
+    'how_to_notify' => 'We notify you when someone likes you.',
     'email_placeholder' => 'your@email.com',
     'phone_placeholder' => '+1 234 567 8900',
     'notification_explanation' => 'You\'ll get notified when someone likes your profile',

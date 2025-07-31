@@ -31,7 +31,7 @@
         </ul>
     </div>
 </div>
-<div x-data="profileForm()" class="h-screen flex flex-col">
+<div x-data="profileForm()" class="h-screen flex flex-col max-w-screen mx-auto">
     <!-- Scrollable content area -->
     <div class="flex-1 overflow-y-auto">
         <div class="hero min-h-full bg-base-100">
@@ -131,20 +131,20 @@
                             <label class="label pb-1">
                                 <span class="label-text text-lg font-semibold">{{ __('app.how_to_notify') }}</span>
                             </label>
-                            <div class="btn-group btn-group-vertical sm:btn-group-horizontal w-full mb-4">
-                                <button type="button" 
-                                        @click="form.notification_type = 'email'" 
-                                        :class="form.notification_type === 'email' ? 'btn-active btn-primary' : ''"
-                                        class="btn flex-1">
+                            <div class="flex w-full mb-4 gap-2">
+                                <button type="button"
+                                        @click="form.contact_type = 'email'"
+                                        :class="form.contact_type === 'email' ? 'btn-primary' : 'btn-ghost'"
+                                        class="btn w-1/2">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                     </svg>
                                     Email
                                 </button>
-                                <button type="button" 
-                                        @click="form.notification_type = 'sms'" 
-                                        :class="form.notification_type === 'sms' ? 'btn-active btn-primary' : ''"
-                                        class="btn flex-1">
+                                <button type="button"
+                                        @click="form.contact_type = 'sms'"
+                                        :class="form.contact_type === 'sms' ? 'btn-primary' : 'btn-ghost'"
+                                        class="btn w-1/2">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                                     </svg>
@@ -152,25 +152,25 @@
                                 </button>
                             </div>
                             
-                            <div x-show="form.notification_type === 'email'" class="form-control">
+                            <div x-show="form.contact_type === 'email'" class="form-control">
                                 <input type="email" 
-                                       x-model="form.notification_value" 
+                                       x-model="form.contact_value" 
                                        class="input input-bordered input-lg w-full" 
                                        placeholder="{{ __('app.email_placeholder') }}" 
-                                       :required="form.notification_type === 'email'" />
+                                       :required="form.contact_type === 'email'" />
                             </div>
                             
-                            <div x-show="form.notification_type === 'sms'" class="form-control">
+                            <div x-show="form.contact_type === 'sms'" class="form-control">
                                 <input type="tel" 
-                                       x-model="form.notification_value" 
+                                       x-model="form.contact_value" 
                                        class="input input-bordered input-lg w-full" 
                                        placeholder="{{ __('app.phone_placeholder') }}" 
-                                       :required="form.notification_type === 'sms'" />
+                                       :required="form.contact_type === 'sms'" />
                             </div>
                             
-                            <label class="label">
+                            <!-- <label class="label">
                                 <span class="label-text-alt">{{ __('app.notification_explanation') }}</span>
-                            </label>
+                            </label> -->
                         </div>
                         <div class="form-control">
                             <label class="label pb-1">
@@ -202,7 +202,7 @@
     <!-- Fixed button at bottom -->
     <div class="p-4 bg-base-100 border-t border-base-300">
         <div class="w-full max-w-md mx-auto">
-            <button type="submit" form="profileForm" :disabled="loading" class="btn btn-primary btn-lg w-full">
+            <button type="button" :disabled="loading" class="btn btn-primary btn-lg w-full" @click="submit()">
                 <span x-text="loading ? '{{ __('app.btn_creating') }}' : '{{ __('app.btn_create') }}'"></span>
             </button>
         </div>
@@ -216,8 +216,8 @@ function profileForm() {
             name: '',
             photo: null,
             message: '',
-            notification_type: 'email',
-            notification_value: '',
+            contact_type: 'email',
+            contact_value: '',
             location: '',
             age: '',
         },
@@ -236,8 +236,7 @@ function profileForm() {
                 const response = await fetch('/api/generate-pickup-line', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         name: this.form.name,
@@ -289,24 +288,45 @@ function profileForm() {
             );
         },
         async submit() {
+            console.log('Submit function called');
+            console.log('Form data:', this.form);
+            
             this.loading = true;
             try {
                 const fd = new FormData();
                 for (const key in this.form) {
-                    if (this.form[key] !== null) {
+                    if (this.form[key] !== null && this.form[key] !== '') {
                         fd.append(key, this.form[key]);
+                        console.log(`Added to FormData: ${key} =`, this.form[key]);
                     }
                 }
 
-                const res = await fetch('/api/profiles', { method: 'POST', body: fd });
+                console.log('Making API request to /api/profiles');
+                const res = await fetch('/api/profiles', { 
+                    method: 'POST', 
+                    body: fd
+                });
+                
+                console.log('Response status:', res.status);
+                console.log('Response ok:', res.ok);
+                
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    console.error('Error response:', errorText);
+                    throw new Error(`HTTP ${res.status}: ${errorText}`);
+                }
+                
                 const data = await res.json();
+                console.log('Response data:', data);
                 this.link = data.url;
                 
                 // Redirect to add-to-home page with the profile URL
+                console.log('Redirecting to:', `/add-to-home?url=${encodeURIComponent(data.url)}`);
                 window.location.href = `/add-to-home?url=${encodeURIComponent(data.url)}`;
-                            } catch (err) {
-                    alert('{{ __('app.error_create') }}');
-                } finally {
+            } catch (err) {
+                console.error('Submit error:', err);
+                alert('{{ __('app.error_create') }}: ' + err.message);
+            } finally {
                 this.loading = false;
             }
         }
