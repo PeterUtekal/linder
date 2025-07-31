@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="bumblebee">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="bumblebee">
 <head>
     <meta charset="UTF-8">
     <title>{{ $profile->name }}</title>
@@ -49,7 +49,7 @@
                 <!-- Name and age at bottom of photo -->
                 <div class="absolute bottom-4 left-4 right-4">
                     <h2 class="text-white text-2xl font-bold mb-1">
-                        {{ $profile->name }}@if($profile->age), {{ $profile->age }}@endif wants to hang out!
+                        {{ $profile->name }}@if($profile->age), {{ $profile->age }}@endif {{ __('app.profile_wants_hangout') }}
                     </h2>
                 </div>
                 
@@ -57,11 +57,11 @@
                 <div class="absolute top-8 left-8 right-8 flex justify-between pointer-events-none">
                     <div class="badge badge-error badge-lg opacity-0 transition-opacity duration-200" 
                          :class="{ 'opacity-100': dragX < -50 }">
-                        NOPE
+                        {{ __('app.swipe_nope') }}
                     </div>
                     <div class="badge badge-success badge-lg opacity-0 transition-opacity duration-200" 
                          :class="{ 'opacity-100': dragX > 50 }">
-                        LIKE
+                        {{ __('app.swipe_like') }}
                     </div>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             <div>
-                                <div class="font-bold">It's a match! 🎉</div>
+                                <div class="font-bold">{{ __('app.match_title') }}</div>
                                 <div class="text-sm" x-html="contactLink()"></div>
                             </div>
                         </div>
@@ -99,7 +99,7 @@
                             <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            <span>Swipe right to reveal contact info! 👉</span>
+                            <span>{{ __('app.swipe_info') }}</span>
                         </div>
                     </template>
                 </div>

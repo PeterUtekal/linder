@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="bumblebee">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="bumblebee">
 <head>
     <meta charset="UTF-8">
     <title>Add to Home Screen - Linder</title>
@@ -15,8 +15,8 @@
     <div class="flex-1 flex items-center justify-center p-4">
         <div class="w-full max-w-md">
             <div class="text-center mb-8">
-                <h1 class="text-4xl font-extrabold leading-tight mb-3">Add to <span class="text-primary">Home Screen</span></h1>
-                <p class="text-base-content/70 mb-6">Follow these simple steps to save your profile link</p>
+                <h1 class="text-4xl font-extrabold leading-tight mb-3">{{ __('app.add_home_title') }}</h1>
+                <p class="text-base-content/70 mb-6">{{ __('app.add_home_subtitle') }}</p>
             </div>
 
             <!-- iOS Instructions -->
