@@ -117,8 +117,14 @@
                         <div class="form-control">
                             <label class="label pb-1">
                                 <span class="label-text text-lg font-semibold">{{ __('app.form_message') }}</span>
+                                <button type="button" @click="suggestPickupLine()" class="btn btn-sm btn-ghost gap-1" :disabled="loadingPickupLine">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                    </svg>
+                                    <span x-text="loadingPickupLine ? '{{ __('app.suggesting') }}' : '{{ __('app.suggest_pickup_line') }}'"></span>
+                                </button>
                             </label>
-                            <textarea x-model="form.message" class="textarea textarea-bordered textarea-lg w-full" placeholder="{{ __('app.form_message_placeholder') }}"></textarea>
+                            <textarea x-model="form.message" class="textarea textarea-bordered textarea-lg w-full" placeholder="{{ __('app.form_message_placeholder') }}" rows="3"></textarea>
                         </div>
                         <div class="flex gap-4">
                             <div class="form-control flex-1">
@@ -189,8 +195,40 @@ function profileForm() {
             age: '',
         },
         loading: false,
+        loadingPickupLine: false,
         gettingLocation: false,
         link: '',
+        async suggestPickupLine() {
+            if (!this.form.name) {
+                alert('{{ __('app.enter_name_first') }}');
+                return;
+            }
+            
+            this.loadingPickupLine = true;
+            try {
+                const response = await fetch('/api/generate-pickup-line', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        name: this.form.name,
+                        age: this.form.age || null,
+                        location: this.form.location || null,
+                        for_self: true
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    this.form.message = data.pickup_line;
+                }
+            } catch (error) {
+                console.error('Error generating pickup line:', error);
+            }
+            this.loadingPickupLine = false;
+        },
         async getLocation() {
             if (!navigator.geolocation) {
                 alert('{{ __('app.error_location_support') }}');
